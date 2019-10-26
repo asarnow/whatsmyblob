@@ -2,15 +2,13 @@ from django.db import models
 
 
 class Job(models.Model):
-    uid = ""
-    submit_time = 0
-    start_time = 0
-    completion_time = 0
-    query_map_file = ""
-    query_points_file = ""
+    submit_time = models.DateTimeField()
+    start_time = models.DateTimeField()
+    completion_time = models.DateTimeField()
+    query_map_file = models.CharField(max_length=100)
+    query_points_file = models.CharField(max_length=100)
 
 
 class Result(models.Model):
-    uid = ""
-    job_uid = ""
-    json_file = ""
+    job = models.ForeignKey(Job)
+    json_file = models.CharField(max_length=100)
