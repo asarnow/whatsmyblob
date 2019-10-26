@@ -10,5 +10,5 @@ class Job(models.Model):
 
 
 class Result(models.Model):
-    job = models.ForeignKey(Job)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
     json_file = models.CharField(max_length=100)
