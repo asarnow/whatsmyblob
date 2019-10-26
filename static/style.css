@@ -1,0 +1,50 @@
+/* Coolors Exported Palette - coolors.co/134074-13315c-0b2545-8da9c4-eef4ed */
+
+/* 
+Dark Cereulean #34074
+#13315c
+#0b2545
+#8da9c4
+#eef4ed */
+
+:root {
+    --indigo-blue: #015CC4;
+    --dark-cereulean: #134074;
+    --prussian-blue: #13315c;
+    --oxford-blue: #0b2545;
+    --pewter-blue: #8da9c4;
+    --isabelline: #eef4ed;
+}
+
+.header {
+    padding: 10px;
+    text-align: left;
+    color: var(--dark-cereulean);
+    font-size: 30px;
+    font: arial; 
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    padding: 2px 16px;
+
+}
+  
+  /* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+  
+.column {
+    float: left;
+    width: 33.33%;
+  }
+  
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }

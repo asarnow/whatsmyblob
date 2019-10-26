@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+    <title>blob.</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+
+</head>
+<body>
+    <div class="header">
+        <h1><i><b>blob.</b> fast atomic structure search for cryo-<b>em.</b></i></h1>
+    </div>
+    <div class="card">
+        <h3><i>how it works.</i></h3>
+            <div class="row">
+                <div class="column">
+                    <p class="description">(1) you upload your blob</p>
+                    <p class="subdescription">we accept .mrc files of up to 300 MB in size.</p>
+                </div>
+                <div class="column">
+                    <p class="description">(2) we find matching structural hits </p>
+                    <p class="subdescription">we compute an invariant representation for comparing volumes to atomic structures</p>
+                </div>
+                <div class="column">
+                    <p class="description">(3) you get fitted candidate structures for your blob</p>
+                    <p class="subdescription">ranked CATH domains + rendered models + db linkouts </p>  
+                </div>
+        </div>
+    </div>
+
+</body>
