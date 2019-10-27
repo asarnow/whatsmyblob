@@ -93,14 +93,6 @@ def run_job(root_tmp_dir_path, unique_id):
 			processed_data_bool = process_data(unique_id)
 			if processed_data_bool:
 				print("Processing complete!")
-				# cleanup tmp directory
-				rm_dir_bool = rm_directory_recursive(unique_tmp_dir)
-				if rm_dir_bool:
-					print("Cleanup complete!")
-					return True
-				else:
-					print("Could not cleanup temporary job directory.")
-					return False
 		else:
 			print("Failed to start job, no temporary job directory created.")
 			return False
