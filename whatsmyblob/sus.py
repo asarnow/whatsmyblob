@@ -58,8 +58,6 @@ def xyz_file(o, fname):
              f.write("C {0} {1} {2}\n".format(*l))
 
 
-<<<<<<< HEAD
-=======
 def sample_density(vol_file, n_samples, apix=None, thresh=0):
     # Draws random samples from the map and returns their weights
     # To avoid sampling empty regions of the map, a threshold is set
@@ -74,7 +72,6 @@ def sample_density(vol_file, n_samples, apix=None, thresh=0):
     return x, w
 
 
->>>>>>> ad8b238... use voxel_size; it's an array.
 if __name__=="__main__":
     from time import time
     t0 = time()
