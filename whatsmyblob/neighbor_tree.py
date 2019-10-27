@@ -29,9 +29,11 @@ def load_balltree(treename):
     return bt
 
 
-def query_bt(query, bt, ids, k=10):
+def query_bt(query, bt, ind2id, k=10):
     """ Query is a 64 element vector """
     q = query.reshape(1,-1)
     dists,inds = bt.query(q, k=k)
-    return [(ids[ind],dis) for ind,dis in zip(inds[0],dists[0])]
+    ids = [ind2id[ind] for ind in inds[0]]
+    # return [(ids[ind],dis) for ind,dis in zip(inds[0],dists[0])]
+    return ids, dists[0]
 
