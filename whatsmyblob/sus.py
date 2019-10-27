@@ -4,12 +4,12 @@ from itertools import product
 from random import random
 
 
-def sus(vol_file, samples=256, apix=1.5, replace=False):
+def sus(vol_file, samples=256, apix=None, replace=False):
     """ Simple stochastic universal sampling """
 
     # Load map
     with mrcfile.open(vol_file) as mrc:
-        if not apix:
+        if apix is None:
             apix = mrc.voxel_size
         volume = mrc.data
 
@@ -56,6 +56,20 @@ def xyz_file(o, fname):
         f.write("Point cloud with origin at 0,0,0\n")
         for l in o:
              f.write("C {0} {1} {2}\n".format(*l))
+
+
+def sample_density(vol_file, n_samples, apix=None, thresh=0):
+    # Draws random samples from the map and returns their weights
+    # To avoid sampling empty regions of the map, a threshold is set
+    with mrcfile.open(vol_file) as mrc:
+        if apix is None:
+            apix = mrc.voxel_size
+        volume = mrc.data
+    C = (volume > thresh).nonzero()
+    s = np.random.randint(len(C[0]), size=n_samples)
+    x = np.array([c[s] for c in C]).T * apix
+    w = volume[C[0][s], C[1][s], C[2][s]].T
+    return x, w
 
 
 if __name__=="__main__":
