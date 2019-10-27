@@ -17,15 +17,24 @@ def handle_req(request):
         form = MapFileForm(request.POST, request.FILES)
         #create new JOB instance
 
-        precheck = False
         #send to fileSaver function
 
+        upload_status = False
+        error_message = "Uh oh. Something's wrong with your upload."
 
-        if form.is_valid() and precheck:
-            form.save()
-        
-        #save
-        return render(request, "blobapp/index.html", {"jobstatus": "Success"})
+
+        if form.is_valid():
+            mapFileInstance = form.save()
+            newJob = models.Job(query_map_file=mapFileInstance) ##CHANGE THIS MODEL TO FOREIGN KEY FOR MAPFILE OBJECT?
+            newJob.save()
+            #run prechecker
+            precheck = True ##replace with function call
+            if precheck:
+                upload_status = True                
+            else:
+                error_message = "We had trouble validating your .mrc file. Check its integrity and try again."
+
+        return render(request, "blobapp/index.html", {"uploadStatus": upload_status, "errorMsg": error_message})
     else:
         form = MapFileForm()
         return render(request, 'blobapp/index.html', {
