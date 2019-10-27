@@ -51,4 +51,3 @@ def run_search(job):
         handle.write(json.dumps(results, indent=4))
     return {"q_time": query_time, "tree_load_time": tree_load_time,
             "nn_time": nn_time, "cc_time": cc_time}
-
