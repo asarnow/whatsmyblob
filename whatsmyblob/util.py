@@ -26,22 +26,29 @@ def handle_upload_mrc(upload):
 
 def run_search(job):
     query_map_file = job.query_map_file.map_file.path
+    t = time.time()
     query_pc = sus.sus(query_map_file, samples=256)
     query_distmat = neighbor_tree.get_distmat(query_pc)
     query_inv_cdf = neighbor_tree.get_inv_cdf(query_distmat)
+    query_time = time.time() - t
+    t = time.time()
     tree = neighbor_tree.load_balltree(os.path.join(settings.MEDIA_ROOT, "nn_tree_1dgw.pkl"))
     ids = neighbor_tree.np.load(os.path.join(settings.MEDIA_ROOT, "nn_tree_1dgw_ids.npy"))
+    tree_load_time = time.time() - t
+    t = time.time()
     hits, nn_scores = neighbor_tree.query_bt(query_inv_cdf, tree, ids, k=10)
+    nn_time = time.time() - t
     # tpc = neighbor_tree.two_point_correlation(query_inv_cdf)
     jobdir = job_control.create_tmp_dir(constants.TEMP_ROOT, job.id)
     json_file = os.path.join(jobdir, "result.json")
     t = time.time()
     cc_scores = run_colores.pool_colores(query_map_file, hits, jobdir)
-    print("CoLoRes done in %d sec" % (time.time() - t))
+    cc_time = time.time() - t
     results = [{'CATH_domain': h, 'neighbor_score': nn, 'corr_coef': cc}
             for h, nn, cc in zip(hits, nn_scores, cc_scores)]
     # Return the output as a JSON file
     with open(json_file, "w") as handle:
         handle.write(json.dumps(results, indent=4))
-    return True
+    return {"q_time": query_time, "tree_load_time": tree_load_time,
+            "nn_time": nn_time, "cc_time": cc_time}
 
