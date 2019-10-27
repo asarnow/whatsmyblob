@@ -10,11 +10,14 @@ parameters.
 
 ![Whats my blob?][2]
 
+## Introduction
 The resolution of many density maps of biomolecular structures is 
 insufficient for de novo reconstructions of structures. However, 
 for many purposes, the protein databank (PDB) provides sufficient
 structural knowledge to identify biomolecular folds using experimentally 
 measured low-resolution densities.
+
+## Methods
 
 What's my blob identifies for given low-resolution densities potential
 protein folds by searching a set of CATH domains for corresponding
