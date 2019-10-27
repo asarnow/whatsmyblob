@@ -28,8 +28,10 @@ result_titles = {
 def make_dataframe(
         jobid: int,
         result_filename: str = 'result.json',
+        folder: str = None
 ) -> pd.DataFrame:
-    folder = os.path.join(constants.TEMP_ROOT, str(jobid))
+    if folder is None:
+        folder = os.path.join(constants.TEMP_ROOT, str(jobid))
     df = pd.DataFrame()
     filename = os.path.join(
         folder,
@@ -67,7 +69,7 @@ def make_datatable(
         bokeh.models.widgets.TableColumn(
             field='CATH_domain',
             title='CATH link',
-            formater=cath_formater
+            formatter=cath_formater
         )
     )
     data_table = bokeh.models.widgets.DataTable(
@@ -144,17 +146,22 @@ def get_rendered_png(
     file_url = os.path.abspath(file_url)
     div_image = bokeh.models.Div(
         text="""<img src="%s" alt="div_image">""" % file_url,
-        width=150, height=150
+        width=300, height=300
     )
     return div_image
 
 
 def generate_html(
         jobid: int,
-        title: str = ""
+        title: str = "",
+        folder: str = None
 ):
-    folder = os.path.join(constants.TEMP_ROOT, str(jobid))
-    df = make_dataframe(jobid=jobid)
+    if folder is None:
+        folder = os.path.join(constants.TEMP_ROOT, str(jobid))
+    df = make_dataframe(
+        jobid=jobid,
+        folder=folder
+    )
     data_table, data_source = make_datatable(df)
     results_table = bokeh.layouts.widgetbox(
                 children=[
@@ -197,6 +204,7 @@ if __name__ == "__main__":
         fp.write(
             generate_html(
                 jobid=1,
-                title='Test'
+                title='Test',
+                folder='./test/data/results/'
             )
         )
