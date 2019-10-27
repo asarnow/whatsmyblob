@@ -3,6 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseNotFound
 from django import forms
 from blobapp import models
+from whatsmyblob import result_table
 from whatsmyblob import util
 from .forms import MapFileForm
 
@@ -34,7 +35,8 @@ def handle_req(request):
             else:
                 error_message = "We had trouble validating your .mrc file. Check its integrity and try again."
 
-        return render(request, "blobapp/index.html", {"uploadStatus": upload_status, "errorMsg": error_message})
+        return render(request, "blobapp/index.html",
+                      {"uploadStatus": upload_status, "errorMsg": error_message, "jobid": newJob.id})
     else:
         form = MapFileForm()
         return render(request, 'blobapp/index.html', {
@@ -46,8 +48,12 @@ def submit():
     pass
 
 
-def result():
-    pass
+def result(request, jobid):
+    html = result_table.generate_html(
+        jobid=jobid,
+        title='Test title'
+    )
+    return HttpResponse(html)
 
 
 def status():

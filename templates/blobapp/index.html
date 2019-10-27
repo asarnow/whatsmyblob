@@ -38,7 +38,7 @@
             </div>
             <div class="column-2">
                 {% if upload_status %}
-                    <a href="/results" class="button">take me to my blob</a>
+                    <a href="/results/{{ jobid }}}" class="button">take me to my blob</a>
                 {% else %}
                     <p class="error-message">{{ error_message }}</p>
                 {% endif %}

@@ -1,13 +1,9 @@
 from __future__ import annotations
-from typing import Dict, List, Tuple
-
-import os
 import glob
-
-import pymol2
+import json
 import numpy as np
+import os
 import pandas as pd
-
 from bokeh.io import output_file, show
 from bokeh.layouts import widgetbox, row, grid, column
 from bokeh.models.widgets import Div
@@ -18,11 +14,8 @@ from bokeh.models.widgets import DataTable, TableColumn
 from bokeh.models import Panel
 from bokeh.models.widgets import Tabs
 from bokeh.embed import file_html
-
-import pymol2
-
-
-import json
+from typing import Dict, List, Tuple
+from whatsmyblob import constants
 
 
 result_titles = {
@@ -84,37 +77,37 @@ def make_plot(
     return p1
 
 
-def render_mrc_pdb_overlays(
-    mrc_filename: str = None,
-    result_folder: str = 'test_folder'
-) -> None:
-    if mrc_filename is None:
-        mrc_filename = glob.glob(
-            os.path.join(
-                result_folder,
-                '*.mrc'
-            )
-        )[0]
-    filename_density = os.path.join(
-        result_folder,
-        mrc_filename
-    )
-    pymol = pymol2.PyMOL()
-    pymol.start()
-    for pdb_filename in glob.glob(
-        os.path.join(
-            result_folder,
-            '*.pdb'
-        )
-    ):
-        root_file, _ = os.path.splitext(pdb_filename)
-        pymol.cmd.do('reinitialize')
-        pymol.cmd.do('bg_color white')
-        pymol.cmd.do('hide all')
-        pymol.cmd.do('show cartoon')
-        pymol.cmd.do('load %s' % filename_density)
-        pymol.cmd.do('load %s' % pdb_filename)
-        pymol.cmd.do('png %s' % root_file + ".png")
+# def render_mrc_pdb_overlays(
+#     mrc_filename: str = None,
+#     result_folder: str = 'test_folder'
+# ) -> None:
+#     if mrc_filename is None:
+#         mrc_filename = glob.glob(
+#             os.path.join(
+#                 result_folder,
+#                 '*.mrc'
+#             )
+#         )[0]
+#     filename_density = os.path.join(
+#         result_folder,
+#         mrc_filename
+#     )
+#     pymol = pymol2.PyMOL()
+#     pymol.start()
+#     for pdb_filename in glob.glob(
+#         os.path.join(
+#             result_folder,
+#             '*.pdb'
+#         )
+#     ):
+#         root_file, _ = os.path.splitext(pdb_filename)
+#         pymol.cmd.do('reinitialize')
+#         pymol.cmd.do('bg_color white')
+#         pymol.cmd.do('hide all')
+#         pymol.cmd.do('show cartoon')
+#         pymol.cmd.do('load %s' % filename_density)
+#         pymol.cmd.do('load %s' % pdb_filename)
+#         pymol.cmd.do('png %s' % root_file + ".png")
 
 
 def get_rendered_png(
@@ -136,9 +129,10 @@ def get_rendered_png(
 
 
 def generate_html(
-        folder: str,
+        jobid: int,
         title: str = ""
 ):
+    folder = os.path.join(constants.TEMP_ROOT, str(jobid))
     df = make_dataframe(folder=folder)
     data_table, data_source = make_datatable(df)
     results_table = widgetbox(
@@ -148,12 +142,12 @@ def generate_html(
                 sizing_mode='scale_width'
     )
     results_plot = make_plot(data_source)
-    render_mrc_pdb_overlays(
-        result_folder=folder
-    )
+    # render_mrc_pdb_overlays(
+    #     result_folder=folder
+    # )
     rendered_results = get_rendered_png(
         '1ubq_fit.pdb',
-        folder='./test_folder'
+        folder=folder
     )
     # Create a row layout
     layout1 = row(results_table, results_plot)
@@ -167,11 +161,3 @@ def generate_html(
     html = file_html(tabs, CDN, title=title)
     return html
 
-
-html = generate_html(
-        folder='test_folder',
-        title='Test title'
-    )
-
-with open('test_file.html', 'w') as fp:
-    fp.write(html)
