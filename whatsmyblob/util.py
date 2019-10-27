@@ -49,5 +49,6 @@ def run_search(job):
     # Return the output as a JSON file
     with open(json_file, "w") as handle:
         handle.write(json.dumps(results, indent=4))
-    return {"q_time": query_time, "tree_load_time": tree_load_time,
-            "nn_time": nn_time, "cc_time": cc_time}
+    time_fmt = "{:3.3f}"
+    return {"q_time": time_fmt.format(query_time), "tree_load_time": time_fmt.format(tree_load_time),
+            "nn_time": time_fmt.format(nn_time), "cc_time": time_fmt.format(cc_time)}
