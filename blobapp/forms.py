@@ -4,4 +4,4 @@ from blobapp.models import MapFile
 class MapFileForm(forms.ModelForm):
     class Meta:
         model = MapFile
-        fields = ('name', 'map_file', )
+        fields = ['name', 'map_file']

@@ -4,7 +4,7 @@ from django import forms
 
 
 class Job(models.Model):
-    submit_time = models.DateTimeField()
+    submit_time = models.DateTimeField(auto_now_add=True)
     start_time = models.DateTimeField()
     completion_time = models.DateTimeField()
     query_map_file = models.CharField(max_length=100)
