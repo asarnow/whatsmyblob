@@ -4,11 +4,13 @@
 
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
-
+    {{ script | safe }}
 </head>
 <body>
     <div class="card">
-        {{ bokeh }}
+        {% for div in divs %}
+            {{ div | safe }}
+        {% endfor %}
     </div>
     <div class="card">
             <script src="https://cdn.rawgit.com/arose/ngl/v2.0.0-dev.37/dist/ngl.js"></script>
