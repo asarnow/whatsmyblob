@@ -8,7 +8,7 @@
     --pewter-blue: #8da9c4;
     --isabelline: #eef4ed;
     --error-messages: rgb(112, 13, 0);
-    font: sans-serif;
+    font-family: "Arial", Arial, sans-serif;
 }
 
 .header {
