@@ -40,6 +40,10 @@ def create_tmp_dir(root_tmp_dir_path, unique_id):
 
 	return unique_path
 
+def get_tmp_dir_path_to_given_job(root_tmp_dir_path, unique_id):
+	job_dir = root_tmp_dir_path + "/whatsmyblob/job_" + unique_id
+	return job_dir
+
 # teardown - delete directory
 def rm_directory_recursive(path_to_directory):
 	# check if directory to be deleted is actually there
