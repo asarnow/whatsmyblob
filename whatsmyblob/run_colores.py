@@ -1,15 +1,13 @@
 import os
 import glob
 import subprocess
-import json
 
 
-def run_colores(query_file, hits, cath_db, output='result.json'):
+def run_colores(query_file, hits, cath_db, cwd):
     """ Run SITUS colores function on hits, renames output 
         fited PDB file and returns score """
 
     result = []
-    cwd = os.path.dirname(output)
     for hit in hits:    
         hit_file, hit_nn_score = hit
         hit_file = os.path.join(cath_db, hit_file)
@@ -41,18 +39,14 @@ def run_colores(query_file, hits, cath_db, output='result.json'):
                         if l[0]=="REMARK" and l[1]=="Unnormalized":
                             cc_score = float(l[-1])
  
-            result.append({'CATH_domain': hit_file,
+            result.append({'CATH_domain': os.path.basename(hit_file),
                             'neighbor_score': hit_nn_score,
                             'corr_coef': cc_score})
 
         except:
             print("Couldn't extract CC score...")
-
-    # Return the output as a JSON file 
-    with open(output, "w") as handle:
-        handle.write(json.dumps(result, indent=4))
        
-    return
+    return result
 
 
 if __name__=="__main__":
