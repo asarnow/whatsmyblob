@@ -1,11 +1,15 @@
 // AJAX for posting
 function receiveSubmit() {
     console.log("submit is working!") // sanity check
+    var formData = new FormData();
+    formData.append('mapfileinput', $('#file-submit-form')[0].files[0]);
+    formData.append('csrfmiddlewaretoken', CSRF_TOKEN);
     $.ajax({
         url : "/submit", // the endpoint
         type : "POST", // http method
-        data : { request : $('#file-submit-form').val() }, // data sent with the post request FILES DATA
-
+        data : formData, // data sent with the post request FILES DATA
+        processData: false,
+        contentType: false,
         // handle a successful response
         success : function(json) {
             console.log(json); // log the returned json to the console
@@ -35,4 +39,5 @@ function receiveSubmit() {
             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
     });
+
 };

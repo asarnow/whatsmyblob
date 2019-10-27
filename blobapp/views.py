@@ -17,7 +17,6 @@ def handle_req(request):
         })
 
 
-@csrf_exempt
 def submit(request):
     form = MapFileForm(request.POST, request.FILES)
     upload_status = False
