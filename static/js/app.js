@@ -20,7 +20,7 @@ function receiveSubmit(event) {
 
             if (json.status.uploadStatus) {
 
-                $("#updates-timing").append("<li> Job queued in "+json.timing.q_time+" seconds </li>");
+                $("#updates-timing").append("<li> Registered map in "+json.timing.q_time+" seconds </li>");
                 $("#updates-timing").append("<li> Search tree loeaded in "+json.timing.tree_load_time+" seconds </li>");
                 $("#updates-timing").append("<li> Nearest neighbor search completed in "+json.timing.nn_time+" seconds </li>");
                 $("#updates-timing").append("<li> Colores search completed in "+json.timing.cc_time+" seconds </li>");
