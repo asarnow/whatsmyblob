@@ -8,22 +8,27 @@
     --pewter-blue: #8da9c4;
     --isabelline: #eef4ed;
     --error-messages: rgb(112, 13, 0);
-    font-family: "Arial", Arial, sans-serif;
+    font-family: "Avenir", Avenir Next, sans-serif;
+    color: var(--prussian-blue);
 }
 
 .header {
     padding: 10px;
     text-align: left;
-    color: var(--dark-cereulean);
-    font-size: 30px;
+    color: var(--indigo-blue);
+    font-size: 25px;
 }
 
 .card {
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    padding: 2px 16px;
+    padding: 20px 40px;
 
+}
+
+.subheader {
+  color: var(--dark-cereulean)
 }
   
   /* On mouse-over, add a deeper shadow */
@@ -34,6 +39,7 @@
 .column {
     float: left;
     width: 33.33%;
+    font-size: 15px;
   }
 
 .column-2 {
@@ -50,6 +56,11 @@
 
 a.button {
   appearance: button;
+  color: var(--indigo-blue);
+  background-color: var(--prussian-blue);
+}
+
+.button {
   color: var(--indigo-blue);
 }
 
