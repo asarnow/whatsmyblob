@@ -72,7 +72,7 @@ def status(request, jobid):
 
 def get_job_pdb(request, jobid, pdb):
     jobdir = os.path.join(constants.TEMP_ROOT, str(jobid))
-    with os.path.join(jobdir, pdb) as f:
+    with open(os.path.join(jobdir, pdb)) as f:
         pdb_str = f.read()
     return pdb_str
 
