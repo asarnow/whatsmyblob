@@ -31,18 +31,21 @@
     <div class="card">
         <div class="row">
             <div class="column-2">
-
-                    <form enctype="multipart/form-data" method="post" action="/"> 
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit">Upload</button>
-                    </form>
+                {% if show_form %}
+                <form enctype="multipart/form-data" method="post" action="/"> 
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Upload</button>
+                </form>
+                {% endif %}
             </div>
             <div class="column-2">
-                {% if upload_status %}
-                    <a href="/results" class="button">take me to my blob</a>
+                {% if uploadStatus %}
+                    <p>
+                        <a href="/results/{{ jobid }}"class="button">take me to my blob</a>
+                    </p>
                 {% else %}
-                    <p class="error-message">{{ error_message }}</p>
+                    <p class="error-message">{{ errorMsg }}</p>
                 {% endif %}
             </div>
         </div>

@@ -3,6 +3,8 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseNotFound
 from django import forms
 from blobapp import models
+from whatsmyblob import result_table
+from whatsmyblob import util
 from .forms import MapFileForm
 
 
@@ -12,7 +14,7 @@ def handle_req(request):
     """Main handler function that accepts POST and GET requests only"""
 
     #render website
-    if request.method == "POST" and request.FILES['input_file']:
+    if request.method == "POST" and request.FILES:
 
         form = MapFileForm(request.POST, request.FILES)
         #create new JOB instance
@@ -25,31 +27,36 @@ def handle_req(request):
 
         if form.is_valid():
             mapFileInstance = form.save()
-            newJob = models.Job(query_map_file=mapFileInstance) ##CHANGE THIS MODEL TO FOREIGN KEY FOR MAPFILE OBJECT?
+            newJob = models.Job(query_map_file=mapFileInstance)
             newJob.save()
-            #run prechecker
-            precheck = True ##replace with function call
+            # precheck = util.handle_upload_mrc(newJob, mapFileInstance)
+            precheck = True
             if precheck:
                 upload_status = True                
             else:
                 error_message = "We had trouble validating your .mrc file. Check its integrity and try again."
 
-        return render(request, "blobapp/index.html", {"uploadStatus": upload_status, "errorMsg": error_message})
+        return render(request, "blobapp/index.html",
+                {"uploadStatus": upload_status, "errorMsg": error_message, "jobid": newJob.id, "show_form": False})
     else:
         form = MapFileForm()
         return render(request, 'blobapp/index.html', {
-            'form': form
+            'form': form, "show_form": True
             })
 
-
-def 
 
 def submit():
     pass
 
 
-def result():
-    pass
+def result(request, jobid):
+    job = models.Job.objects.filter(id=jobid)[0]
+    util.run_search(job)
+    html = result_table.generate_html(
+        jobid=jobid,
+        title='Test title'
+    )
+    return HttpResponse(html)
 
 
 def status():
