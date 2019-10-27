@@ -10,16 +10,16 @@ def validate_unique_id(unique_id):
 # setup job
 # 1 - create root app directory in /tmp if does not exist
 # 2 - create tmp directory for given job with unique ID attached to name
-def create_tmp_dir(root_tmp_dir_path, unique_id):
+def create_tmp_dir(app_tmp_path, unique_id):
 	# is main tmp directory accessible/exists?
-	if not os.path.exists(root_tmp_dir_path):
-		print("Root temporary directory, " + root_tmp_dir_path + " not found!")
-		return False
-	elif not os.access(root_tmp_dir_path, os.W_OK):
-		print("Cannot write to root temporary directory, " + root_tmp_dir_path)
-		return False
+	# if not os.path.exists(root_tmp_dir_path):
+	# 	print("Root temporary directory, " + root_tmp_dir_path + " not found!")
+	# 	return False
+	# elif not os.access(root_tmp_dir_path, os.W_OK):
+	#	print("Cannot write to root temporary directory, " + root_tmp_dir_path)
+	#	return False
 
-	app_tmp_path = root_tmp_dir_path + "/whatsmyblob"
+	# app_tmp_path = root_tmp_dir_path + "/whatsmyblob"
 
 	# try creating root app tmp directory
 	if not os.path.exists(app_tmp_path):
@@ -31,7 +31,7 @@ def create_tmp_dir(root_tmp_dir_path, unique_id):
 			print("Successfully created the directory %s \'" % app_tmp_path + "\'")
 	
 	try:
-		unique_path = app_tmp_path + "/job_" + unique_id
+		unique_path = os.path.join(app_tmp_path, str(unique_id))
 		os.mkdir(unique_path)
 	except OSError:
 		print("Creation of tmp unique job directory %s failed" % app_tmp_path)
