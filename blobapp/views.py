@@ -3,6 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseNotFound
 from django import forms
 from blobapp import models
+from whatsmyblob import util
 from .forms import MapFileForm
 
 
@@ -25,10 +26,9 @@ def handle_req(request):
 
         if form.is_valid():
             mapFileInstance = form.save()
-            newJob = models.Job(query_map_file=mapFileInstance) ##CHANGE THIS MODEL TO FOREIGN KEY FOR MAPFILE OBJECT?
+            newJob = models.Job(query_map_file=mapFileInstance)
             newJob.save()
-            #run prechecker
-            precheck = True ##replace with function call
+            precheck = util.handle_upload_mrc(newJob, request.FILES['input_file'])
             if precheck:
                 upload_status = True                
             else:
@@ -41,8 +41,6 @@ def handle_req(request):
             'form': form
             })
 
-
-def 
 
 def submit():
     pass
