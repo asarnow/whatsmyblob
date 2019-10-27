@@ -57,16 +57,13 @@ def result(request, jobid):
     )
 
     df_results = result_table.make_dataframe(jobid=jobid)
-
     jobdir = os.path.join(constants.TEMP_ROOT, str(jobid))
-
-    densityPath = job.query_map_file.map_file.url
     pdb_target = df_results.CATH_domain[0][:4]
-    pdbFileName = pdb_target + "_fit.pdb"
-    pdbPath = os.path.join(jobdir, pdbFileName)
+    pdbFileName = "get_job_pdb/" + str(jobid) + "/" + pdb_target + "_fit.pdb"
+    densityPath = "get_map/" + str(jobid)
     return render(request, 'blobapp/results.html',
                   {"bokeh": html, "densityMap": densityPath,
-                   "pdb": pdbPath})
+                   "pdb": pdbFileName})
 
 
 def status(request, jobid):
