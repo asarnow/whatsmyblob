@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseNotFound
 from django import forms
@@ -16,6 +17,7 @@ def handle_req(request):
         })
 
 
+@csrf_exempt
 def submit(request):
     form = MapFileForm(request.POST, request.FILES)
     upload_status = False
