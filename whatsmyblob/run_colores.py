@@ -1,6 +1,31 @@
 import os
 import glob
+import shutil
 import subprocess
+
+
+def colores(cwd, i=0, res=8):
+    crdir = os.mkdir(os.path.join(cwd, "colores_%d" % i)
+    try:
+        stdout = subprocess.run(["colores", query_file, hit_file,
+                             "-explor", "1", "-res", "%0.2f" % res],
+                             cwd=crdir, stdout=subprocess.PIPE)
+        with open(os.path.join(cwd, "colores_%d.log" % i)) as f:
+            f.writelines(stdout)
+        fit_pdb os.path.join(cwd, os.basename(hit_file) + "_fit.pdb")
+        best_pdb = os.path.join(crdir, "col_best_001.pdb")
+        os.rename(best_pdb, fit_pdb)
+        shutil.rmtree(crdir)
+        with open(fit_pdb, "r") as f:
+            for l in f:
+                tok = l.strip().split()
+                if len(tok) ==  5 and tok[0] == "REMARK" and l[1] == "Unnormalized":
+                    cc_score = float(l[-1])
+    except IOException as e:
+        print(e)
+    return cc_score
+
+
 
 
 def run_colores(query_file, hits, cath_db, cwd):
