@@ -7,6 +7,7 @@ class Job(models.Model):
     completion_time = models.DateTimeField()
     query_map_file = models.CharField(max_length=100)
     query_points_file = models.CharField(max_length=100)
+    status = models.IntegerField()
 
 
 class Result(models.Model):
