@@ -21,6 +21,6 @@ from blobapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blobapp.urls')),
-    path('get_job_pdb/<int:jobid>/<str:pdb>', views.get_job_pdb()),
+    path('get_job_pdb/<int:jobid>/<str:pdb>', views.get_job_pdb),
     path('get_map/<int:jobid>', views.get_map),
 ]
