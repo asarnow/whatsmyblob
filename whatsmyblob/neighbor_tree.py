@@ -8,7 +8,7 @@ from sklearn.neighbors import BallTree
 def get_distmat(coords):
     """ Computes square distance matrix given Nx3 coordinates """
     dists = pdist(coords)
-    dm  = squareform(dists)
+    dm = squareform(dists)
     return dm
 
 
