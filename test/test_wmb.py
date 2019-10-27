@@ -18,7 +18,8 @@ class TestWhatsMyBlob(unittest.TestCase):
         html_str = whatsmyblob.result_table.generate_html(
             jobid=1,
             folder='./data/results/',
-            title='Test title 1'
+            title='Test title 1',
+            get_components=False
         )
         # write to file
         filename_html = 'test.html'

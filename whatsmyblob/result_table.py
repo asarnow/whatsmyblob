@@ -2,6 +2,7 @@ from __future__ import annotations
 import glob
 import json
 import os
+import requests
 import pandas as pd
 from typing import Tuple
 try:
@@ -19,9 +20,11 @@ from whatsmyblob import constants
 
 
 result_titles = {
+    'name': 'Protein name',
     'corr_coef': 'Correlation coefficient',
     'CATH_domain': 'CATH domain',
-    'neighbor_score': 'Neighbour score'
+    'neighbor_score': 'Neighbour score',
+    'chain_length': 'Chain length'
 }
 
 
@@ -44,6 +47,24 @@ def make_dataframe(
         for key in keys:
             df[key] = [d[i][key] for i in range(n_results)]
     df.sort_values(by=['corr_coef'])
+
+    pdb_ids = ",".join(list(df.CATH_domain.str.slice(0,4)))
+    text = requests.get(
+        url='http://www.rcsb.org/pdb/rest/customReport.csv',
+        params={
+            "pdbids": pdb_ids,
+            "customReportColumns": "chainLength,uniprotRecommendedName",
+            "format": "csv"
+        }
+    ).text
+    lines = text.split('<br />')
+    data = [line.split(",") for line in lines]
+    pdb_results = pd.DataFrame(
+        data=data[1:-1],
+        columns=data[0]
+    )
+    df["chain_length"] = pdb_results.chainLength
+    df["name"] = pdb_results.uniprotRecommendedName
     return df
 
 
@@ -192,8 +213,9 @@ def generate_html(
 
     # Make a tab with the layout
     tab1 = bokeh.models.Panel(child=layout1, title='Results')
-    tab2 = bokeh.models.Panel(child=layout2, title='View')
-    tabs = bokeh.models.widgets.Tabs(tabs=[tab1, tab2])
+    #tab2 = bokeh.models.Panel(child=layout2, title='View')
+    #tabs = bokeh.models.widgets.Tabs(tabs=[tab1, tab2])
+    tabs = bokeh.models.widgets.Tabs(tabs=[tab1])
 
     if not get_components:
         return bokeh.embed.file_html(
@@ -203,7 +225,9 @@ def generate_html(
         )
     else:
         return bokeh.embed.components(
-            models=tabs
+            models=tabs,
+            wrap_script=True,
+            wrap_plot_info=True
         )
 
 
