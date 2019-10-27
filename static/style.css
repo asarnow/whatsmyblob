@@ -8,6 +8,7 @@
     --pewter-blue: #8da9c4;
     --isabelline: #eef4ed;
     --error-messages: rgb(112, 13, 0);
+    font: sans-serif;
 }
 
 .header {
@@ -15,7 +16,6 @@
     text-align: left;
     color: var(--dark-cereulean);
     font-size: 30px;
-    font: arial; 
 }
 
 .card {
@@ -36,7 +36,7 @@
     width: 33.33%;
   }
 
-.column {
+.column-2 {
   float: left;
   width: 50%;
 }
