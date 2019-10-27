@@ -51,7 +51,6 @@ def submit(request):
 
 def result(request, jobid):
     job = models.Job.objects.filter(id=jobid)[0]
-    util.run_search(job)
     html = result_table.generate_html(
         jobid=jobid,
         title='Test title'
