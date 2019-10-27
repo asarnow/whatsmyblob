@@ -9,43 +9,14 @@ from whatsmyblob import util
 from .forms import MapFileForm
 
 
-
-@require_http_methods(["GET", "POST"])
 def handle_req(request):
-    """Main handler function that accepts POST and GET requests only"""
-    #render website
-    # if request.method == "POST" and request.FILES:
-    #
-    #     form = MapFileForm(request.POST, request.FILES)
-    #     #create new JOB instance
-    #
-    #     #send to fileSaver function
-    #
-    #     upload_status = False
-    #     error_message = "Uh oh. Something's wrong with your upload."
-    #
-    #
-    #     if form.is_valid():
-    #         mapFileInstance = form.save()
-    #         newJob = models.Job(query_map_file=mapFileInstance)
-    #         newJob.save()
-    #         # precheck = util.handle_upload_mrc(newJob, mapFileInstance)
-    #         precheck = True
-    #         if precheck:
-    #             upload_status = True
-    #         else:
-    #             error_message = "We had trouble validating your .mrc file. Check its integrity and try again."
-    #
-    #     return render(request, "blobapp/index.html",
-    #             {"uploadStatus": upload_status, "errorMsg": error_message, "jobid": newJob.id, "show_form": False})
-    # else:
     form = MapFileForm()
     return render(request, 'blobapp/index.html', {
         'form': form, "show_form": True
         })
 
 
-def submit(request, jobid):
+def submit(request):
     form = MapFileForm(request.POST, request.FILES)
     upload_status = False
     error_message = "Uh oh. Something's wrong with your upload."
