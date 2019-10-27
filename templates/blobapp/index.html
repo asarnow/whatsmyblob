@@ -32,23 +32,26 @@
         <div class="row">
             <div class="column-2">
                 {% if show_form %}
-                <form enctype="multipart/form-data" method="post" action="/"> 
+                <form enctype="multipart/form-data" method="post" action="/submit" id="file-submit-form"> 
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit">Upload</button>
+                    <button type="submit" id="submit-button">Upload</button>
                 </form>
                 {% endif %}
             </div>
-            <div class="column-2">
-                {% if uploadStatus %}
+            <div class="column-2" id="submit-update">
                     <p>
-                        <a href="/results/{{ jobid }}"class="button">take me to my blob</a>
+                        <!-- timing["q_time"], timing["tree_load_time"], timing["nn_time"], timing["cc_time] -->
+                        <ul id="updates-timing"> 
+                        </ul>
+                        <div id="link-button">  
+                        </div>
                     </p>
-                {% else %}
-                    <p class="error-message">{{ errorMsg }}</p>
-                {% endif %}
+                    <div id="error-message">
+                    </div>
             </div>
         </div>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
 </body>
