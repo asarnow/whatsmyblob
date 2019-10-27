@@ -1,0 +1,37 @@
+[
+    {
+        "corr_coef": 0.1, 
+        "CATH_domain": "1a10I00",
+        "neighbor_score": 0.1
+    },
+    {
+        "corr_coef": 0.2,
+        "CATH_domain": "1a1vA01",
+        "neighbor_score": 0.2
+    },
+    {
+        "corr_coef": 0.3,
+        "CATH_domain": "1a1vA02",
+        "neighbor_score": 0.3
+    },
+    {
+        "corr_coef": 0.4,
+        "CATH_domain": "1a1vA03",
+        "neighbor_score": 0.4
+    },
+    {
+        "corr_coef": 0.5,
+        "CATH_domain": "1a1wA00",
+        "neighbor_score": 0.5
+    },
+    {
+        "corr_coef": 0.6,
+        "CATH_domain": "1a1xA00",
+        "neighbor_score": 0.6
+    },
+    {
+        "corr_coef": 0.7,
+        "CATH_domain": "1a21A01",
+        "neighbor_score": 0.7
+    }
+]
