@@ -53,7 +53,7 @@ def run_colores(query_file, hits, cath_db, output='result.json'):
     return
 
 
-if __name__ == "__main__":
+if __name__=="__main__":
     query_file = "1ubq.mrc"
     hits = [('1ubq',.1), ('1ndd',2)]
     #cath_db = "/mnt/atlas-data/eugene/dompdb/"
