@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<script src="https://cdn.rawgit.com/arose/ngl/v2.0.0-dev.37/dist/ngl.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var stage = new NGL.Stage("viewport");
+        // Code for example: parser/dsn6
+        stage.loadFile("https://raw.githubusercontent.com/arose/ngl/v2.0.0-dev.37/data/1lee.ccp4").then(function (o) {
+            o.addRepresentation("surface", {
+                opacity: 0.7,
+                opaqueBack: true
+            });
+            stage.autoView();
+        });
+
+        stage.loadFile("https://www.ebi.ac.uk/pdbe/entry-files/pdb1cbs.ent").then(function (o) {
+            o.addRepresentation("cartoon");
+            stage.autoView();
+        })
+
+    });
+</script>
+<div id="viewport" style="width:600px; height:600px;"></div>
+</body>
+</html>

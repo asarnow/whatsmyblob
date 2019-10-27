@@ -43,6 +43,7 @@ def make_dataframe(
         keys = d[0].keys()
         for key in keys:
             df[key] = [d[i][key] for i in range(n_results)]
+    df.sort_values(by=['corr_coef'])
     return df
 
 
@@ -151,10 +152,17 @@ def get_rendered_png(
     return div_image
 
 
+def generate_3d_view():
+    from jinja2 import Template
+    t = Template("Hello {{ something }}!")
+    t.render(something="World")
+
+
 def generate_html(
         jobid: int,
         title: str = "",
-        folder: str = None
+        folder: str = None,
+        get_components: bool = True
 ):
     if folder is None:
         folder = os.path.join(constants.TEMP_ROOT, str(jobid))
@@ -187,16 +195,16 @@ def generate_html(
     tab2 = bokeh.models.Panel(child=layout2, title='View')
     tabs = bokeh.models.widgets.Tabs(tabs=[tab1, tab2])
 
-    html = bokeh.embed.file_html(
-        models=tabs,
-        resources=bokeh.resources.CDN,
-        title=title,
-        template=os.path.join(
-            os.path.dirname(__file__),
-            'result_page/template.html'
+    if not get_components:
+        return bokeh.embed.file_html(
+            models=tabs,
+            resources=bokeh.resources.CDN,
+            title=title
         )
-    )
-    return html
+    else:
+        return bokeh.embed.components(
+            models=tabs
+        )
 
 
 if __name__ == "__main__":
