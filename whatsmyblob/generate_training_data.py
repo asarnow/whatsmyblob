@@ -33,7 +33,7 @@ from numpy.random import normal
 from tqdm import tqdm
 from prody import parsePDB
 from prody import confProDy
-from . import neighbor_tree
+# from . import neighbor_tree
 
 
 def make_distmats(protein_structures="/storage/datasets/cath/dompdb/*", 
@@ -66,45 +66,45 @@ def make_distmats(protein_structures="/storage/datasets/cath/dompdb/*",
             pass
 
 
-def get_triplets(triplet_file="triplets_noise3.csv",
-                 id_file="nn_tree_1dgw_ids.npy",
-                 protein_structures="./dompdb/*",
-                 balltree_file="nn_tree_1dgw.pkl", noise=3):
-    """ Generate triplets for training """
-
-    # Load id file and ball tree
-    ids = np.load(id_file)
-    with open(balltree_file, "rb") as f:
-        tree = pickle.loads(f.read())
-
-    confProDy(verbosity='none')
-    pdb_list = glob(protein_structures)
-
-    with open(triplet_file, "w") as handle:
-        for pdb_file in tqdm(pdb_list, desc="Triplets", total=len(pdb_list)):
-            try:
-                pdb = parsePDB(pdb_file).select('name CA CB')
-                pdb_id = pdb_file.split("/")[-1]
-
-                coords = pdb.getCoords()
-                coords -= coords.mean(axis=0)
-
-                coords += normal(scale=noise, size=coords.shape)
-
-                dists = pdist(coords)
-                dm = squareform(dists)
-
-                shape_dist = neighbor_tree.get_inv_cdf(dm)
-                nns = neighbor_tree.query_bt(shape_dist, tree, ids)
-
-                for nn in nns[0]:
-                    if nn != pdb_id:
-                        triplet = f"{pdb_id},{pdb_id},{nn}\n"
-                        handle.write(triplet)
-
-            except:
-                print(f"File {pdb} was not properly parsed...")
-                pass
+# def get_triplets(triplet_file="triplets_noise3.csv",
+#                  id_file="nn_tree_1dgw_ids.npy",
+#                  protein_structures="./dompdb/*",
+#                  balltree_file="nn_tree_1dgw.pkl", noise=3):
+#     """ Generate triplets for training """
+#
+#     # Load id file and ball tree
+#     ids = np.load(id_file)
+#     with open(balltree_file, "rb") as f:
+#         tree = pickle.loads(f.read())
+#
+#     confProDy(verbosity='none')
+#     pdb_list = glob(protein_structures)
+#
+#     with open(triplet_file, "w") as handle:
+#         for pdb_file in tqdm(pdb_list, desc="Triplets", total=len(pdb_list)):
+#             try:
+#                 pdb = parsePDB(pdb_file).select('name CA CB')
+#                 pdb_id = pdb_file.split("/")[-1]
+#
+#                 coords = pdb.getCoords()
+#                 coords -= coords.mean(axis=0)
+#
+#                 coords += normal(scale=noise, size=coords.shape)
+#
+#                 dists = pdist(coords)
+#                 dm = squareform(dists)
+#
+#                 shape_dist = neighbor_tree.get_inv_cdf(dm)
+#                 nns = neighbor_tree.query_bt(shape_dist, tree, ids)
+#
+#                 for nn in nns[0]:
+#                     if nn != pdb_id:
+#                         triplet = f"{pdb_id},{pdb_id},{nn}\n"
+#                         handle.write(triplet)
+#
+#             except:
+#                 print(f"File {pdb} was not properly parsed...")
+#                 pass
 
 if __name__=="__main__":
     make_distmats()
