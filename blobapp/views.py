@@ -62,7 +62,7 @@ def submit(request, jobid):
     else:
         return "Another error"
     timing = util.run_search(newJob)
-    # timing["q_time"], timing["tree_load_time"], timing["nn_time"], timing["cc_time]}
+    # timing["q_time"], timing["tree_load_time"], timing["nn_time"], timing["cc_time]
     ajaxResp = json.dumps({'timing': timing,
                            'status': {"uploadStatus": upload_status,
                                       "errorMsg": error_message,
@@ -80,4 +80,4 @@ def result(request, jobid):
 
 
 def status(request, jobid):
-    job = models.Job.objects.filter(id=jobid)[0]
+    pass
