@@ -36,7 +36,7 @@ from prody import confProDy
 # from . import neighbor_tree
 
 
-def make_distmats(protein_structures="/storage/datasets/cath/dompdb/*", 
+def make_distmats(protein_structures="dompdb/*",
                   output_file='training_data.hdf'):
     """ Creates and HDF5 file with samples distance matrices and 1D CDFs 
         protein_structures: path to all domains to parse
