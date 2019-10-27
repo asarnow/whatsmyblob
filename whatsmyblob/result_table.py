@@ -53,9 +53,23 @@ def make_datatable(
     source = bokeh.models.ColumnDataSource(data_frame)
     keys = result_titles.keys()
     columns = [
-            bokeh.models.widgets.TableColumn(field=key, title=result_titles[key])
+            bokeh.models.widgets.TableColumn(
+                field=key,
+                title=result_titles[key],
+            )
             for key in keys
         ]
+    cath_formater = bokeh.models.widgets.tables.HTMLTemplateFormatter(
+        template='<a href="http://beta.cathdb.info/version/v4_2_0/domain/<%= value %>" '
+                 'target="_blank"><%= value %></a>'
+    )
+    columns.append(
+        bokeh.models.widgets.TableColumn(
+            field='CATH_domain',
+            title='CATH link',
+            formater=cath_formater
+        )
+    )
     data_table = bokeh.models.widgets.DataTable(
         source=source,
         columns=columns,
@@ -113,6 +127,7 @@ def render_mrc_pdb_overlays(
         pymol.cmd.do('show cartoon')
         pymol.cmd.do('load %s' % filename_density)
         pymol.cmd.do('load %s' % pdb_filename)
+        pymol.cmd.do("matrix_copy %s, %s" % (pdb_filename, filename_density))
         pymol.cmd.do('png %s' % root_file + ".png")
 
 
