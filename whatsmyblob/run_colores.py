@@ -31,6 +31,7 @@ def colores(query_file, hit_file, cwd, i=0, res=8):
                     break
     except IOError as e:
         print(e)
+        return -1
     return cc_score
 
 

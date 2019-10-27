@@ -33,7 +33,7 @@
             <div class="column-2">
                 {% if show_form %}
                 <form enctype="multipart/form-data" method="post"
-                      action="" id="file-submit-form" onsubmit="receiveSubmit()">
+                      action="" id="file-submit-form">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit" id="submit-button">Upload</button>
@@ -55,4 +55,5 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script src="{% static 'js/app.js' %}"></script>
+    <script>$('#file-submit-form').submit(receiveSubmit)</script>
 </body>
