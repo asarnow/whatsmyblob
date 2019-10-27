@@ -1,20 +1,20 @@
 from __future__ import annotations
 import glob
 import json
-import numpy as np
 import os
 import pandas as pd
-from bokeh.io import output_file, show
-from bokeh.layouts import widgetbox, row, grid, column
-from bokeh.models.widgets import Div
-from bokeh.plotting import figure, Figure
-from bokeh.resources import CDN
-from bokeh.models import ColumnDataSource, Plot
-from bokeh.models.widgets import DataTable, TableColumn
-from bokeh.models import Panel
-from bokeh.models.widgets import Tabs
-from bokeh.embed import file_html
-from typing import Dict, List, Tuple
+from typing import Tuple
+try:
+    import pymol2
+except ImportError:
+    pymol2 = None
+
+import bokeh.layouts
+import bokeh.models
+import bokeh.plotting
+import bokeh.models.widgets
+import bokeh.resources
+import bokeh.embed
 from whatsmyblob import constants
 
 
@@ -26,9 +26,12 @@ result_titles = {
 
 
 def make_dataframe(
-        folder: str = 'test_folder',
+        jobid: int,
         result_filename: str = 'result.json',
+        folder: str = None
 ) -> pd.DataFrame:
+    if folder is None:
+        folder = os.path.join(constants.TEMP_ROOT, str(jobid))
     df = pd.DataFrame()
     filename = os.path.join(
         folder,
@@ -45,14 +48,31 @@ def make_dataframe(
 
 def make_datatable(
         data_frame: pd.DataFrame
-) -> Tuple[DataTable, ColumnDataSource]:
-    source = ColumnDataSource(data_frame)
+) -> Tuple[
+    bokeh.models.widgets.DataTable,
+    bokeh.models.ColumnDataSource
+]:
+    source = bokeh.models.ColumnDataSource(data_frame)
     keys = result_titles.keys()
     columns = [
-            TableColumn(field=key, title=result_titles[key])
+            bokeh.models.widgets.TableColumn(
+                field=key,
+                title=result_titles[key],
+            )
             for key in keys
         ]
-    data_table = DataTable(
+    cath_formater = bokeh.models.widgets.tables.HTMLTemplateFormatter(
+        template='<a href="http://beta.cathdb.info/version/v4_2_0/domain/<%= value %>" '
+                 'target="_blank"><%= value %></a>'
+    )
+    columns.append(
+        bokeh.models.widgets.TableColumn(
+            field='CATH_domain',
+            title='CATH link',
+            formatter=cath_formater
+        )
+    )
+    data_table = bokeh.models.widgets.DataTable(
         source=source,
         columns=columns,
         width=400,
@@ -62,10 +82,12 @@ def make_datatable(
 
 
 def make_plot(
-    source: ColumnDataSource
-) -> Figure:
-    p1 = figure(title="Correlation coefficients of assessed structures")
-    p1.grid.grid_line_alpha=0.3
+    source: bokeh.models.ColumnDataSource
+) -> bokeh.plotting.Figure:
+    p1 = bokeh.plotting.figure(
+        title="Correlation coefficients of assessed structures"
+    )
+    p1.grid.grid_line_alpha = 0.3
     p1.xaxis.axis_label = 'Structure'
     p1.yaxis.axis_label = 'Correlation coefficient'
     p1.circle(
@@ -77,43 +99,44 @@ def make_plot(
     return p1
 
 
-# def render_mrc_pdb_overlays(
-#     mrc_filename: str = None,
-#     result_folder: str = 'test_folder'
-# ) -> None:
-#     if mrc_filename is None:
-#         mrc_filename = glob.glob(
-#             os.path.join(
-#                 result_folder,
-#                 '*.mrc'
-#             )
-#         )[0]
-#     filename_density = os.path.join(
-#         result_folder,
-#         mrc_filename
-#     )
-#     pymol = pymol2.PyMOL()
-#     pymol.start()
-#     for pdb_filename in glob.glob(
-#         os.path.join(
-#             result_folder,
-#             '*.pdb'
-#         )
-#     ):
-#         root_file, _ = os.path.splitext(pdb_filename)
-#         pymol.cmd.do('reinitialize')
-#         pymol.cmd.do('bg_color white')
-#         pymol.cmd.do('hide all')
-#         pymol.cmd.do('show cartoon')
-#         pymol.cmd.do('load %s' % filename_density)
-#         pymol.cmd.do('load %s' % pdb_filename)
-#         pymol.cmd.do('png %s' % root_file + ".png")
+def render_mrc_pdb_overlays(
+    mrc_filename: str = None,
+    result_folder: str = 'test_folder'
+) -> None:
+    if mrc_filename is None:
+        mrc_filename = glob.glob(
+            os.path.join(
+                result_folder,
+                '*.mrc'
+            )
+        )[0]
+    filename_density = os.path.join(
+        result_folder,
+        mrc_filename
+    )
+    pymol = pymol2.PyMOL()
+    pymol.start()
+    for pdb_filename in glob.glob(
+        os.path.join(
+            result_folder,
+            '*.pdb'
+        )
+    ):
+        root_file, _ = os.path.splitext(pdb_filename)
+        pymol.cmd.do('reinitialize')
+        pymol.cmd.do('bg_color white')
+        pymol.cmd.do('hide all')
+        pymol.cmd.do('show cartoon')
+        pymol.cmd.do('load %s' % filename_density)
+        pymol.cmd.do('load %s' % pdb_filename)
+        pymol.cmd.do("matrix_copy %s, %s" % (pdb_filename, filename_density))
+        pymol.cmd.do('png %s' % root_file + ".png")
 
 
 def get_rendered_png(
     selected_pdb_filename: str,
     folder: str = './test_folder',
-) -> Div:
+) -> bokeh.models.widgets.Div:
     root_filename, _ = os.path.splitext(selected_pdb_filename)
     filename_png = root_filename + '.png'
     file_url = os.path.join(
@@ -121,43 +144,67 @@ def get_rendered_png(
             filename_png
         )
     file_url = os.path.abspath(file_url)
-    div_image = Div(
+    div_image = bokeh.models.Div(
         text="""<img src="%s" alt="div_image">""" % file_url,
-        width=150, height=150
+        width=300, height=300
     )
     return div_image
 
 
 def generate_html(
         jobid: int,
-        title: str = ""
+        title: str = "",
+        folder: str = None
 ):
-    folder = os.path.join(constants.TEMP_ROOT, str(jobid))
-    df = make_dataframe(folder=folder)
+    if folder is None:
+        folder = os.path.join(constants.TEMP_ROOT, str(jobid))
+    df = make_dataframe(
+        jobid=jobid,
+        folder=folder
+    )
     data_table, data_source = make_datatable(df)
-    results_table = widgetbox(
+    results_table = bokeh.layouts.widgetbox(
                 children=[
                     data_table
                 ],
                 sizing_mode='scale_width'
     )
     results_plot = make_plot(data_source)
-    # render_mrc_pdb_overlays(
-    #     result_folder=folder
-    # )
+    if pymol2 is not None:
+        render_mrc_pdb_overlays(
+            result_folder=folder
+        )
     rendered_results = get_rendered_png(
         '1ubq_fit.pdb',
         folder=folder
     )
     # Create a row layout
-    layout1 = row(results_table, results_plot)
-    layout2 = row(rendered_results)
+    layout1 = bokeh.layouts.row(results_table, results_plot)
+    layout2 = bokeh.layouts.row(rendered_results)
 
     # Make a tab with the layout
-    tab1 = Panel(child=layout1, title='Results')
-    tab2 = Panel(child=layout2, title='View')
-    tabs = Tabs(tabs=[tab1, tab2])
+    tab1 = bokeh.models.Panel(child=layout1, title='Results')
+    tab2 = bokeh.models.Panel(child=layout2, title='View')
+    tabs = bokeh.models.widgets.Tabs(tabs=[tab1, tab2])
 
-    html = file_html(tabs, CDN, title=title)
+    html = bokeh.embed.file_html(
+        models=tabs,
+        resources=bokeh.resources.CDN,
+        title=title,
+        template=os.path.join(
+            os.path.dirname(__file__),
+            'result_page/template.html'
+        )
+    )
     return html
 
+
+if __name__ == "__main__":
+    with open('test.html', 'w') as fp:
+        fp.write(
+            generate_html(
+                jobid=1,
+                title='Test',
+                folder='./test/data/results/'
+            )
+        )
