@@ -59,7 +59,7 @@ def result(request, jobid):
 
     df_results = result_table.make_dataframe(jobid=jobid)
 
-    jobdir = os.path.join(constants.TEMP_ROOT, jobid)
+    jobdir = os.path.join(constants.TEMP_ROOT, str(jobid))
 
     densityPath = job.query_map_file.map_file.url
     pdb_target = df_results.CATH_domain[0][:4]
