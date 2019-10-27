@@ -2,6 +2,7 @@
 # University of California, San Francisco
 import json
 import mrcfile
+import numpy as np
 import os
 import time
 from django.conf import settings
@@ -27,7 +28,10 @@ def handle_upload_mrc(upload):
 def run_search(job):
     query_map_file = job.query_map_file.map_file.path
     t = time.time()
-    query_pc = sus.sus(query_map_file, samples=256)
+    if query_map_file.endswith(".npy"):
+        query_pc = np.load(query_map_file)
+    else:
+        query_pc = sus.sus(query_map_file, samples=256)
     query_distmat = neighbor_tree.get_distmat(query_pc)
     query_inv_cdf = neighbor_tree.get_inv_cdf(query_distmat)
     query_time = time.time() - t
