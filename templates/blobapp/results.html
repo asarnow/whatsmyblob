@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <title>blob.</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+
+</head>
+<body>
+    <div class="card">
+        {{ bokeh }}
+    </div>
+    <div class="card">
+            <script src="https://cdn.rawgit.com/arose/ngl/v2.0.0-dev.37/dist/ngl.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var stage = new NGL.Stage("viewport");
+                    // Code for example: parser/dsn6
+                    stage.loadFile("{{densityMap}}").then(function (o) {
+                        o.addRepresentation("surface", {
+                            color: "skyblue",
+                            isolevel: 1.5,
+                            boxSize: 10,
+                            useWorker: false,
+                            contour: true
+                        });
+                        stage.autoView();
+                    });
+            
+                    stage.loadFile("{{pdb}}").then(function (o) {
+                        o.addRepresentation("cartoon");
+                        stage.autoView();
+                    })
+            
+                });
+            </script>
+            <div id="viewport" style="width:600px; height:600px;"></div>
+    
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <link href="https://cdn.bokeh.org/bokeh/release/bokeh-x.y.z.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-x.y.z.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bokeh.org/bokeh/release/bokeh-tables-x.y.z.min.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-x.y.z.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-x.y.z.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-x.y.z.min.js"></script>
+</body>

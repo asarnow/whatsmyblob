@@ -1,10 +1,12 @@
 import json
+import os.path
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseNotFound
 from django import forms
 from blobapp import models
+from whatsmyblob import constants
 from whatsmyblob import result_table
 from whatsmyblob import util
 from .forms import MapFileForm
@@ -41,10 +43,31 @@ def submit(request):
     return HttpResponse(ajaxResp, content_type="application/json")
 
 
+# def result(request, jobid):
+#     job = models.Job.objects.filter(id=jobid)[0]
+#     html = result_table.generate_html(jobid=jobid, title=job.query_map_file.name)
+#     return HttpResponse(html)
+
+
 def result(request, jobid):
     job = models.Job.objects.filter(id=jobid)[0]
-    html = result_table.generate_html(jobid=jobid, title=job.query_map_file.name)
-    return HttpResponse(html)
+    util.run_search(job)
+    html = result_table.generate_html(
+        jobid=jobid,
+        title='Test title'
+    )
+
+    df_results = result_table.make_dataframe(jobid=jobid)
+
+    jobdir = os.path.join(constants.TEMP_ROOT, jobid)
+
+    densityPath = job.query_map_file.map_file.url
+    pdb_target = df_results.CATH_domain[0][:4]
+    pdbFileName = pdb_target + "_fit.pdb"
+    pdbPath = os.path.join(jobdir, pdbFileName)
+    return render(request, 'blobapp/results.html',
+                  {"bokeh": html, "densityMap": densityPath,
+                   "pdb": pdbPath})
 
 
 def status(request, jobid):
