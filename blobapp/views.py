@@ -72,3 +72,18 @@ def result(request, jobid):
 
 def status(request, jobid):
     pass
+
+
+def get_job_pdb(request, jobid, pdb):
+    jobdir = os.path.join(constants.TEMP_ROOT, str(jobid))
+    with os.path.join(jobdir, pdb) as f:
+        pdb_str = f.read()
+    return pdb_str
+
+
+def get_map(request, jobid):
+    job = models.Job.objects.filter(id=jobid)[0]
+    map_file = job.query_map_file.path
+    with open(map_file) as f:
+        map_bytes = f.read()
+    return map_bytes
