@@ -43,7 +43,7 @@ def submit(request):
 
 def result(request, jobid):
     job = models.Job.objects.filter(id=jobid)[0]
-    html = result_table.generate_html(jobid=jobid, title=job.name)
+    html = result_table.generate_html(jobid=jobid, title=job.query_map_file.name)
     return HttpResponse(html)
 
 
