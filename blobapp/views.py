@@ -35,15 +35,11 @@ def submit(request):
     else:
         return "Another error"
     timing = util.run_search(newJob)
-    # timing["q_time"], timing["tree_load_time"], timing["nn_time"], timing["cc_time]
     ajaxResp = json.dumps({'timing': timing,
                            'status': {"uploadStatus": upload_status,
                                       "errorMsg": error_message,
                                       "jobid": newJob.id}})
     return HttpResponse(ajaxResp, content_type="application/json")
-    # return render(request, "blobapp/index.html",
-    #               {"uploadStatus": upload_status, "errorMsg": error_message,
-    #                "jobid": newJob.id, "show_form": False})
 
 
 def result(request, jobid):
