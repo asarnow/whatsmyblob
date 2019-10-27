@@ -19,7 +19,7 @@ def handle_req(request):
 def submit(request):
     form = MapFileForm(request.POST, request.FILES)
     upload_status = False
-    error_message = "Uh oh. Something's wrong with your upload."
+    error_message = ""
     if form.is_valid():
         mapFileInstance = form.save()
         newJob = models.Job(query_map_file=mapFileInstance)
