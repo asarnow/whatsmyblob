@@ -1,0 +1,22 @@
+name: whatsmyblob
+
+channels:
+  - tpeulen
+  - conda-forge
+  - defaults
+
+dependencies:
+    - python=3.7
+    - django
+    - pyyaml
+    - numpy
+    - pandas
+    - pymol-open-source
+    - django
+    - bokeh
+    - scipy
+    - scikit-learn
+    - sphinx_bootstrap_theme
+    - sphinx-autodoc-typehints
+    - numpydoc
+    - mrcfile
