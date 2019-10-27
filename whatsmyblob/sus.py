@@ -10,7 +10,7 @@ def sus(vol_file, samples=256, apix=None, replace=False):
     # Load map
     with mrcfile.open(vol_file) as mrc:
         if apix is None:
-            apix = mrc.voxel_size[0]
+            apix = mrc.voxel_size['x']
         volume = mrc.data
 
     # Generate coordinate list and flattened image
@@ -63,7 +63,7 @@ def sample_density(vol_file, n_samples, apix=None, thresh=0):
     # To avoid sampling empty regions of the map, a threshold is set
     with mrcfile.open(vol_file) as mrc:
         if apix is None:
-            apix = mrc.voxel_size[0]
+            apix = mrc.voxel_size['x']
         volume = mrc.data
     C = (volume > thresh).nonzero()
     s = np.random.randint(len(C[0]), size=n_samples)
