@@ -10,13 +10,12 @@ from whatsmyblob import neighbor_tree
 from whatsmyblob import run_colores
 
 
-def handle_upload_mrc(job, upload):
-    # dest = os.path.join(constants.TEMP_ROOT, str(job.id), "query.mrc")
-    with open(upload.map_file.url, 'wb+') as f:
+def handle_upload_mrc(upload):
+    with open(upload.map_file.path, 'wb+') as f:
         for c in upload.chunks():
             f.write(c)
     try:
-        with mrcfile.open(dest, permissive=True) as f:
+        with mrcfile.open(upload.map_file.path, permissive=True) as f:
             pass
     except:
         return False
@@ -32,6 +31,9 @@ def run_search(job):
     hits = neighbor_tree.query_bt(query_inv_cdf, tree, ids, k=10)
     jobdir = job_control.create_tmp_dir(constants.TEMP_ROOT, job.id)
     results = os.path.join(jobdir, "result.json")
-    run_colores.run_colores(job.query_map_file.map_file.path, hits, constants.CATHDB, output=results)
+    run_colores.run_colores(job.query_map_file.map_file.path,
+                            hits,
+                            os.path.join(settings.MEDIA_ROOT, constants.CATHDB),
+                            output=results)
     return True
 
