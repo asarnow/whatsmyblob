@@ -9,8 +9,8 @@ def sus(vol_file, samples=256, apix=1.5, replace=False):
 
     # Load map
     with mrcfile.open(vol_file) as mrc:
-        if not apix:
-            apix = mrc.voxel_size
+        if apix is None:
+            apix = mrc.voxel_size[0]
         volume = mrc.data
 
     # Generate coordinate list and flattened image
@@ -58,6 +58,23 @@ def xyz_file(o, fname):
              f.write("C {0} {1} {2}\n".format(*l))
 
 
+<<<<<<< HEAD
+=======
+def sample_density(vol_file, n_samples, apix=None, thresh=0):
+    # Draws random samples from the map and returns their weights
+    # To avoid sampling empty regions of the map, a threshold is set
+    with mrcfile.open(vol_file) as mrc:
+        if apix is None:
+            apix = mrc.voxel_size[0]
+        volume = mrc.data
+    C = (volume > thresh).nonzero()
+    s = np.random.randint(len(C[0]), size=n_samples)
+    x = np.array([c[s] for c in C]).T * apix
+    w = volume[C[0][s], C[1][s], C[2][s]].T
+    return x, w
+
+
+>>>>>>> ad8b238... use voxel_size; it's an array.
 if __name__=="__main__":
     from time import time
     t0 = time()
