@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import tempfile
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -127,3 +128,8 @@ STATICFILES_DIRS = [
 #Media files for file uploads
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+TEMP_ROOT = os.path.join(tempfile.gettempdir(), "wmb")
+BALL_TREE = "nn_tree_1dgw.pkl"
+BALL_TREE_IDS = "nn_tree_1dgw_ids.npy"
+CATHDB = "dompdb"

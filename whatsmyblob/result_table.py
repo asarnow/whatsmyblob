@@ -16,7 +16,7 @@ import bokeh.plotting
 import bokeh.models.widgets
 import bokeh.resources
 import bokeh.embed
-from whatsmyblob import constants
+from django.conf import settings
 
 
 result_titles = {
@@ -34,7 +34,7 @@ def make_dataframe(
         folder: str = None
 ) -> pd.DataFrame:
     if folder is None:
-        folder = os.path.join(constants.TEMP_ROOT, str(jobid))
+        folder = os.path.join(settings.TEMP_ROOT, str(jobid))
     df = pd.DataFrame()
     filename = os.path.join(
         folder,
@@ -186,7 +186,7 @@ def generate_html(
         get_components: bool = True
 ):
     if folder is None:
-        folder = os.path.join(constants.TEMP_ROOT, str(jobid))
+        folder = os.path.join(settings.TEMP_ROOT, str(jobid))
     df = make_dataframe(
         jobid=jobid,
         folder=folder

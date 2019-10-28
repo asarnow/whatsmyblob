@@ -1,12 +1,9 @@
 import json
 import os.path
+from django.conf import settings
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse, HttpResponseNotFound
-from django import forms
+from django.http import HttpResponse
 from blobapp import models
-from whatsmyblob import constants
 from whatsmyblob import result_table
 from whatsmyblob import util
 from .forms import MapFileForm
@@ -57,7 +54,7 @@ def result(request, jobid):
     )
     divs = [d for d in html[1]]
     df_results = result_table.make_dataframe(jobid=jobid)
-    jobdir = os.path.join(constants.TEMP_ROOT, str(jobid))
+    jobdir = os.path.join(settings.TEMP_ROOT, str(jobid))
     pdb_target = df_results.CATH_domain[0][:4]
     pdbFileName = "get_job_pdb/" + str(jobid) + "/" + pdb_target + "_fit.pdb"
     densityPath = "get_map/" + str(jobid)
@@ -72,7 +69,7 @@ def status(request, jobid):
 
 
 def get_job_pdb(request, jobid, pdb):
-    jobdir = os.path.join(constants.TEMP_ROOT, str(jobid))
+    jobdir = os.path.join(settings.TEMP_ROOT, str(jobid))
     with open(os.path.join(jobdir, pdb)) as f:
         pdb_str = f.read()
     return pdb_str

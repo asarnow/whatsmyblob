@@ -6,7 +6,6 @@ import numpy as np
 import os
 import time
 from django.conf import settings
-from whatsmyblob import constants
 from whatsmyblob import job_control
 from whatsmyblob import sus
 from whatsmyblob import neighbor_tree
@@ -43,7 +42,7 @@ def run_search(job):
     hits, nn_scores = neighbor_tree.query_bt(query_inv_cdf, tree, ids, k=10)
     nn_time = time.time() - t
     # tpc = neighbor_tree.two_point_correlation(query_inv_cdf)
-    jobdir = job_control.create_tmp_dir(constants.TEMP_ROOT, job.id)
+    jobdir = job_control.create_tmp_dir(settings.TEMP_ROOT, job.id)
     json_file = os.path.join(jobdir, "result.json")
     t = time.time()
     cc_scores = run_colores.pool_colores(query_map_file, hits, jobdir)

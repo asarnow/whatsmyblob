@@ -1,16 +1,14 @@
 import os
-import glob
 import shutil
 import subprocess
 from multiprocessing import Pool
-from whatsmyblob import constants
 from django.conf import settings
 
 
 def colores(query_file, hit_file, cwd, i=0, res=8):
     crdir = os.path.join(cwd, "colores_%d" % i)
     os.mkdir(crdir)
-    cathdb = os.path.join(settings.MEDIA_ROOT, constants.CATHDB)
+    cathdb = os.path.join(settings.MEDIA_ROOT, settings.CATHDB)
     hit_file = os.path.join(cathdb, hit_file)
     try:
         proc = subprocess.run(["colores", query_file, hit_file,
